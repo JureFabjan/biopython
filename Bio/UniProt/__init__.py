@@ -11,3 +11,33 @@ from UniProt-GOA as the module Bio.UniProt.GOA.
 See also Bio.SwissProt and the "swiss" support in Bio.SeqIO for
 the legacy plain text sequence format still used in UniProt.
 """
+
+from Bio._py3k import urlopen as _urlopen
+from Bio._py3k import urlencode as _urlencode
+from Bio._py3k import _binary_to_string_handle
+
+
+def search(text, output_format="tab", sort="score", oragnism="", columns=(),
+           isoform=False, compress=False, offset=0, limit=0):
+    """Perform a query over the UniProt API.
+
+    More at: https://www.uniprot.org/help/api_queries
+    """
+    cgi = "https://www.uniprot.org/uniprot/?"
+    variables = {"query": text,
+                 "format": output_format,
+                 "sort": sort,
+                 "offset": str(offset)}
+    if oragnism:
+        variables["organism"] = oragnism
+    if columns:
+        variables["columns"] = ",".join(columns)
+    if isoform:
+        variables["isoform"] = "Yes"
+    if compress:
+        variables["compress"] = "Yes"
+    if limit:
+        variables["limit"] = str(limit)
+
+    fullcgi = "".join((cgi, _urlencode(variables)))
+    return _binary_to_string_handle(_urlopen(fullcgi))
