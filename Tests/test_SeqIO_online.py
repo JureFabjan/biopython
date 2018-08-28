@@ -110,7 +110,7 @@ class UniProtTests(unittest.TestCase):
         self.assertEqual(len(records[0]), 371)
         self.assertEqual(seguid(records[0]), "/lZIKaiUBqo5Tsx44ifwT0ay8U4")
 
-        handle = search(identifier, output_format="xml")
+        handle = UniProt.search(identifier, output_format="xml")
         records = list(SeqIO.parse(handle, "uniprot-xml"))
         self.assertEqual(len(records), 1)
         self.assertEqual(len(records[0]), 371)
